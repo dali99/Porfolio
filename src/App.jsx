@@ -7,10 +7,12 @@ import Education from './components/Education'
 import Projects from './components/Projects'
 import Skills from './components/Skills'
 import Contact from './components/Contact'
+import ScrollHelpers from './components/ScrollHelpers'
 
 function App() {
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-brand-500/30">
+      <ScrollHelpers />
       <Header />
       <main>
         <Hero />

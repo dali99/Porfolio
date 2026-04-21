@@ -66,11 +66,11 @@ export default function Skills() {
                   </div>
                   <h3 className="text-xl font-bold text-white">{category.title}</h3>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-2">
                   {category.skills.map((skill, i) => (
-                    <span 
-                      key={i} 
+                    <span
+                      key={i}
                       className="px-3 py-1.5 bg-zinc-800/80 text-zinc-300 rounded-lg text-sm font-medium hover:text-white hover:bg-zinc-700 transition-colors cursor-default"
                     >
                       {skill}
