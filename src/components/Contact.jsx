@@ -107,13 +107,13 @@ export default function Contact() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex justify-center"
         >
-          <a
+          {/* <a
             href="mailto:dalimagri99@gmail.com"
             className="btn-primary flex items-center gap-2 text-base"
           >
             <Send className="w-4 h-4" />
             Envoyer un message
-          </a>
+          </a> */}
         </motion.div>
 
         {/* Footer */}

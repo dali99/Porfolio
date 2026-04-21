@@ -60,12 +60,12 @@ export default function Header() {
               <span className="absolute inset-0 rounded-lg bg-white/0 group-hover:bg-white/5 transition-all duration-200" />
             </a>
           ))}
-          <a
+          {/* <a
             href="#contact"
             className="ml-3 btn-primary text-sm py-2 px-5"
           >
             Embauchez-moi
-          </a>
+          </a> */}
         </nav>
 
         {/* Mobile */}
@@ -98,9 +98,9 @@ export default function Header() {
                   {item.name}
                 </a>
               ))}
-              <a href="#contact" className="mt-4 btn-primary text-center">
+              {/* <a href="#contact" className="mt-4 btn-primary text-center">
                 Embauchez-moi
-              </a>
+              </a> */}
             </div>
           </motion.nav>
         )}
