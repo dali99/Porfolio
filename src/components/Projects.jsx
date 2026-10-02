@@ -1,242 +1,481 @@
-import React, { useState } from 'react';
+﻿import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, CheckCircle2, ArrowUpRight } from 'lucide-react';
+import { X, ArrowUpRight, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const projects = [
+// ─────────────────────────────────────────────────────────────
+//  DATA
+// ─────────────────────────────────────────────────────────────
+const PROJECTS = [
   {
-    id: 1,
-    title: "Plateforme de Santé Digitale",
-    subtitle: "SaaS B2B — Ministère de la Santé",
-    description: "Plateforme complète de gestion des structures et personnels de santé avec tableaux de bord analytiques en temps réel.",
-    image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=400&fit=crop",
-    tech: ["Spring Boot", "React.js", "PostgreSQL", "Keycloak", "Docker"],
-    color: "from-teal-600 to-cyan-700",
+    id:       1,
+    num:      '01',
+    title:    'Plateforme de Santé Digitale',
+    subtitle: 'SaaS B2B · Ministère de la Santé',
+    desc:     'Plateforme complète de gestion des structures et personnels de santé avec tableaux de bord analytiques en temps réel.',
+    accent:   '#7c3aed',
+    gradient: 'linear-gradient(135deg, #1a0a3d 0%, #2d1b69 50%, #0f172a 100%)',
+    tags:     ['Spring Boot', 'React.js', 'PostgreSQL', 'Keycloak', 'Docker'],
     tasks: [
-      "Conception et implémentation d'une API RESTful scalable avec Spring Boot",
-      "Développement du module de gestion des structures de santé (CRUD, hiérarchie organisationnelle)",
-      "Intégration de Keycloak pour l'authentification SSO et la gestion RBAC des rôles",
-      "Création de tableaux de bord analytiques avec filtres dynamiques par région/gouvernorat",
-      "Mise en place d'un pipeline CI/CD avec GitHub Actions et Docker",
-      "Optimisation des requêtes PostgreSQL pour gérer +50 000 enregistrements",
-      "Développement du formulaire multi-étapes pour la création des utilisateurs privés",
-    ]
+      "API RESTful scalable avec Spring Boot et architecture en couches (Controller → Service → Repository).",
+      "Module de gestion des structures de santé : CRUD + hiérarchie organisationnelle.",
+      "Intégration Keycloak pour SSO multi-applications et gestion RBAC des rôles.",
+      "Tableaux de bord analytiques avec filtres dynamiques par région et gouvernorat.",
+      "Pipeline CI/CD avec GitLab CI et conteneurisation Docker / Docker Compose.",
+      "Optimisation PostgreSQL pour gérer +50 000 enregistrements.",
+      "Formulaire multi-étapes pour la création des utilisateurs privés.",
+    ],
   },
   {
-    id: 2,
-    title: "Application de Gestion RH",
+    id:       2,
+    num:      '02',
+    title:    'Application de Gestion RH',
     subtitle: "Système Interne d'Entreprise",
-    description: "Système de gestion des ressources humaines avec suivi des présences, congés et évaluations des performances.",
-    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&h=400&fit=crop",
-    tech: ["Django REST", "React.js", "MySQL", "React Query", "RBAC"],
-    color: "from-violet-600 to-purple-700",
+    desc:     'Système RH avec suivi des présences, congés, évaluations de performances et rapports automatisés.',
+    accent:   '#00ffd0',
+    gradient: 'linear-gradient(135deg, #001a14 0%, #003d2e 50%, #0a1628 100%)',
+    tags:     ['Django REST', 'React.js', 'MySQL', 'React Query', 'RBAC'],
     tasks: [
-      "Architecture complète du backend Django REST avec modèles de données normalisés",
-      "Implémentation du système de gestion des congés avec workflow d'approbation multi-niveaux",
-      "Développement du module de suivi des présences avec intégration pointeuse RFID",
-      "Création d'un système de notifications email automatiques avec Celery & Redis",
-      "Interface React.js responsive avec gestion d'état via React Query",
-      "Génération de rapports PDF mensuels avec WeasyPrint",
-      "Tests unitaires et d'intégration avec couverture > 85%",
-    ]
+      "Architecture backend Django REST avec modèles normalisés et serializers.",
+      "Workflow d'approbation des congés multi-niveaux avec notifications email.",
+      "Module de suivi des présences avec intégration pointeuse RFID.",
+      "Notifications automatiques avec Celery & Redis (emails + alertes temps réel).",
+      "Interface React.js responsive avec gestion d'état React Query.",
+      "Génération de rapports PDF mensuels avec WeasyPrint.",
+      "Tests unitaires et d'intégration avec couverture > 85 %.",
+    ],
   },
   {
-    id: 3,
-    title: "Portail E-Commerce B2B",
-    subtitle: "Marketplace Multi-Vendeurs",
-    description: "Plateforme de commerce en ligne B2B avec catalogue produits, gestion des commandes et paiements sécurisés.",
-    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop",
-    tech: ["Next.js", "Spring Boot", "PostgreSQL", "Stripe", "Docker"],
-    color: "from-orange-600 to-rose-600",
+    id:       3,
+    num:      '03',
+    title:    'Portail E-Commerce B2B',
+    subtitle: 'Marketplace Multi-Vendeurs',
+    desc:     'Plateforme B2B avec catalogue produits, gestion des commandes, paiements sécurisés et dashboard vendeur.',
+    accent:   '#f59e0b',
+    gradient: 'linear-gradient(135deg, #1a0e00 0%, #3d2000 50%, #1a0a0a 100%)',
+    tags:     ['Next.js', 'Spring Boot', 'PostgreSQL', 'Stripe', 'Docker'],
     tasks: [
-      "Architecture microservices avec Spring Boot pour les services de catalogue, commande et paiement",
-      "Développement du frontend Next.js avec SSR pour l'optimisation SEO",
-      "Intégration de Stripe pour les paiements en ligne avec webhooks",
-      "Système de recherche avancée avec filtres produits (prix, catégorie, fournisseur)",
-      "Gestion multi-vendeurs avec tableau de bord vendeur personnalisé",
-      "Système de reviews et notations avec modération automatique",
-      "Optimisation du chargement des images avec Cloudinary et lazy loading",
-    ]
+      "Architecture microservices Spring Boot : catalogue, commande, paiement.",
+      "Frontend Next.js avec SSR pour l'optimisation SEO.",
+      "Intégration Stripe pour paiements en ligne et gestion des webhooks.",
+      "Recherche avancée avec filtres produits (prix, catégorie, fournisseur).",
+      "Dashboard vendeur personnalisé avec analytiques des ventes.",
+      "Système de reviews et notations avec modération automatique.",
+      "Optimisation des images avec Cloudinary et lazy loading.",
+    ],
   },
   {
-    id: 4,
-    title: "Application de Surveillance Réseau",
-    subtitle: "Outil DevOps & Monitoring",
-    description: "Dashboard de surveillance réseau en temps réel avec alertes automatiques et historique des métriques.",
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop",
-    tech: ["Python", "React.js", "WebSocket", "Grafana", "Docker"],
-    color: "from-slate-600 to-zinc-700",
+    id:       4,
+    num:      '04',
+    title:    'Surveillance Réseau',
+    subtitle: 'Outil DevOps & Monitoring',
+    desc:     'Dashboard de surveillance réseau temps réel avec alertes automatiques, historique des métriques et visualisation Grafana.',
+    accent:   '#a78bfa',
+    gradient: 'linear-gradient(135deg, #0d0d1a 0%, #1a1035 50%, #050508 100%)',
+    tags:     ['Python', 'React.js', 'WebSocket', 'Grafana', 'Docker'],
     tasks: [
-      "Développement d'agents Python pour la collecte des métriques réseau en temps réel",
-      "Mise en place d'une architecture WebSocket pour les mises à jour temps réel côté client",
-      "Intégration de Grafana pour les tableaux de bord de visualisation",
-      "Système d'alertes configurable par e-mail et Slack",
-      "Stockage des métriques historiques dans InfluxDB avec rétention configurable",
-      "Dashboard React.js responsive avec graphiques interactifs Chart.js",
-      "Déploiement conteneurisé avec Docker Compose, monitoring inclus",
-    ]
-  }
+      "Agents Python de collecte des métriques réseau en temps réel.",
+      "Architecture WebSocket pour les mises à jour live côté client.",
+      "Intégration Grafana pour les tableaux de bord de visualisation.",
+      "Système d'alertes configurable par e-mail et Slack.",
+      "Stockage des métriques dans InfluxDB avec rétention configurable.",
+      "Dashboard React.js avec graphiques interactifs Chart.js.",
+      "Déploiement conteneurisé Docker Compose, monitoring inclus.",
+    ],
+  },
 ];
 
-function ProjectModal({ project, onClose }) {
+// ─────────────────────────────────────────────────────────────
+//  PROJECT MODAL
+// ─────────────────────────────────────────────────────────────
+function Modal({ project, onClose, onPrev, onNext, total, idx }) {
   return (
-    <AnimatePresence>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 800,
+        background: 'rgba(0,0,0,0.88)',
+        backdropFilter: 'blur(16px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '1.5rem',
+      }}
+      onClick={onClose}
+    >
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-        onClick={onClose}
+        initial={{ opacity: 0, scale: 0.93, y: 24 }}
+        animate={{ opacity: 1, scale: 1,    y: 0  }}
+        exit={{    opacity: 0, scale: 0.93, y: 24 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        onClick={e => e.stopPropagation()}
+        style={{
+          width: '100%', maxWidth: 680,
+          maxHeight: '90vh', overflowY: 'auto',
+          borderRadius: 24,
+          background: '#0c0c12',
+          border: `1px solid ${project.accent}25`,
+          boxShadow: `0 40px 100px rgba(0,0,0,0.8), 0 0 60px ${project.accent}15`,
+          position: 'relative',
+        }}
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Modal Header Image */}
-          <div className={`relative h-48 bg-gradient-to-br ${project.color} overflow-hidden rounded-t-2xl`}>
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-full object-cover mix-blend-overlay opacity-60"
-            />
-            <div className="absolute inset-0 flex flex-col justify-end p-6">
-              <span className="text-sm font-medium text-white/70 mb-1">{project.subtitle}</span>
-              <h3 className="text-2xl font-bold text-white">{project.title}</h3>
+        {/* ── Gradient header ── */}
+        <div style={{
+          height: 180, background: project.gradient,
+          borderRadius: '24px 24px 0 0',
+          position: 'relative', overflow: 'hidden',
+          display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+          padding: '1.75rem',
+        }}>
+          {/* Animated mesh overlay */}
+          <div style={{
+            position: 'absolute', inset: 0, opacity: 0.3,
+            backgroundImage: `radial-gradient(circle at 30% 50%, ${project.accent}40 0%, transparent 60%),
+                              radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%)`,
+          }} />
+          {/* Subtle grid */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
+            backgroundSize: '40px 40px',
+          }} />
+
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: '0.65rem', fontFamily: 'Space Mono, monospace', color: `${project.accent}cc`, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+              {project.num} / {String(total).padStart(2,'0')} · {project.subtitle}
             </div>
+            <h3 className="syne" style={{ fontSize: '1.6rem', fontWeight: 800, color: 'white', letterSpacing: '-0.025em', lineHeight: 1.1 }}>
+              {project.title}
+            </h3>
+          </div>
+        </div>
+
+        {/* ── Body ── */}
+        <div style={{ padding: '2rem' }}>
+          <p style={{ color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, marginBottom: '1.5rem', fontSize: '0.95rem' }}>
+            {project.desc}
+          </p>
+
+          {/* Tech tags */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', marginBottom: '2rem' }}>
+            {project.tags.map((tag, i) => (
+              <span key={i} style={{
+                padding: '0.28rem 0.75rem', borderRadius: '7px',
+                fontSize: '0.72rem', fontWeight: 700,
+                background: `${project.accent}12`,
+                border: `1px solid ${project.accent}28`,
+                color: project.accent,
+              }}>
+                {tag}
+              </span>
+            ))}
           </div>
 
-          {/* Close Button */}
+          {/* Tasks */}
+          <div style={{ marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.2rem' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: project.accent, boxShadow: `0 0 8px ${project.accent}` }} />
+              <span className="mono" style={{ fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>
+                Tâches réalisées
+              </span>
+            </div>
+            <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+              {project.tasks.map((task, i) => (
+                <motion.li
+                  key={i}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.055, duration: 0.3 }}
+                  style={{ display: 'flex', gap: '0.7rem', alignItems: 'flex-start', color: 'rgba(255,255,255,0.52)', fontSize: '0.88rem', lineHeight: 1.6 }}
+                >
+                  <CheckCircle2 size={14} style={{ color: project.accent, flexShrink: 0, marginTop: 3 }} />
+                  {task}
+                </motion.li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* ── Navigation ── */}
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          padding: '1.25rem 2rem',
+          borderTop: '1px solid rgba(255,255,255,0.05)',
+        }}>
           <button
-            onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/70 text-white transition-colors"
+            onClick={onPrev}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.35)', background: 'none', border: 'none', padding: '0.5rem 0.75rem', borderRadius: '8px', transition: 'all 0.2s' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'white'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.35)'}
           >
-            <X className="w-5 h-5" />
+            <ChevronLeft size={15} /> Précédent
           </button>
 
-          {/* Modal Content */}
-          <div className="p-6">
-            <p className="text-zinc-400 mb-6">{project.description}</p>
-
-            {/* Tech Stack */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              {project.tech.map((t, i) => (
-                <span key={i} className="px-3 py-1 bg-zinc-800 text-brand-400 rounded-full text-xs font-semibold border border-brand-500/30">
-                  {t}
-                </span>
-              ))}
-            </div>
-
-            {/* Tasks */}
-            <div>
-              <h4 className="text-white font-semibold text-lg mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-brand-400 inline-block"></span>
-                Tâches réalisées
-              </h4>
-              <ul className="space-y-3">
-                {project.tasks.map((task, i) => (
-                  <motion.li
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.06 }}
-                    className="flex items-start gap-3 text-zinc-300 text-sm"
-                  >
-                    <CheckCircle2 className="w-4 h-4 text-brand-400 flex-shrink-0 mt-0.5" />
-                    {task}
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
+          {/* Dot indicators */}
+          <div style={{ display: 'flex', gap: '6px' }}>
+            {PROJECTS.map((_, i) => (
+              <span key={i} style={{ width: i === idx ? 18 : 6, height: 6, borderRadius: 4, background: i === idx ? project.accent : 'rgba(255,255,255,0.15)', transition: 'all 0.3s' }} />
+            ))}
           </div>
-        </motion.div>
+
+          <button
+            onClick={onNext}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.35)', background: 'none', border: 'none', padding: '0.5rem 0.75rem', borderRadius: '8px', transition: 'all 0.2s' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'white'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.35)'}
+          >
+            Suivant <ChevronRight size={15} />
+          </button>
+        </div>
+
+        {/* ── Close button ── */}
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute', top: 16, right: 16,
+            width: 36, height: 36, borderRadius: '50%',
+            background: 'rgba(0,0,0,0.5)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'white', transition: 'all 0.2s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.5)'}
+        >
+          <X size={16} />
+        </button>
       </motion.div>
-    </AnimatePresence>
+    </motion.div>
   );
 }
 
-export default function Projects() {
-  const [selected, setSelected] = useState(null);
+// ─────────────────────────────────────────────────────────────
+//  PROJECT CARD
+// ─────────────────────────────────────────────────────────────
+function ProjectCard({ project, index, onClick }) {
+  const cardRef = useRef(null);
+
+  const onMouseMove = useCallback((e) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    el.style.setProperty('--mx', `${x}px`);
+    el.style.setProperty('--my', `${y}px`);
+  }, []);
 
   return (
-    <section id="projects" className="py-24 relative">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Section Header */}
+    <motion.div
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      ref={cardRef}
+      onClick={onClick}
+      onMouseMove={onMouseMove}
+      data-hover
+      style={{
+        borderRadius: 20,
+        border: `1px solid rgba(255,255,255,0.07)`,
+        background: 'rgba(255,255,255,0.025)',
+        overflow: 'hidden',
+        position: 'relative',
+        transition: 'border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease',
+        '--mx': '50%', '--my': '50%',
+      }}
+      className="project-card"
+    >
+      {/* Mouse-follow spotlight */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, opacity: 0,
+        background: `radial-gradient(280px circle at var(--mx) var(--my), ${project.accent}10 0%, transparent 70%)`,
+        transition: 'opacity 0.3s',
+      }} className="card-spotlight" />
+
+      {/* ── Visual header ── */}
+      <div style={{
+        height: 200, background: project.gradient, position: 'relative', overflow: 'hidden',
+      }}>
+        {/* Grid pattern */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)`,
+          backgroundSize: '32px 32px',
+        }} />
+
+        {/* Glow orb */}
+        <div style={{
+          position: 'absolute', top: '20%', left: '15%',
+          width: 140, height: 140, borderRadius: '50%',
+          background: `radial-gradient(circle, ${project.accent}30 0%, transparent 70%)`,
+          filter: 'blur(20px)',
+        }} />
+
+        {/* Project number */}
+        <div style={{
+          position: 'absolute', top: '1rem', left: '1.25rem',
+          fontFamily: 'Space Mono, monospace', fontSize: '0.65rem',
+          color: `${project.accent}80`, letterSpacing: '0.2em',
+        }}>
+          {project.num}
+        </div>
+
+        {/* Arrow icon */}
+        <div style={{
+          position: 'absolute', top: '1rem', right: '1.25rem',
+          width: 34, height: 34, borderRadius: '50%',
+          background: 'rgba(0,0,0,0.4)',
+          border: `1px solid ${project.accent}30`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: project.accent,
+          transition: 'all 0.3s',
+        }} className="card-arrow">
+          <ArrowUpRight size={15} />
+        </div>
+
+        {/* Tech pills bottom */}
+        <div style={{
+          position: 'absolute', bottom: '1rem', left: '1.25rem',
+          display: 'flex', flexWrap: 'wrap', gap: '0.4rem',
+        }}>
+          {project.tags.slice(0, 3).map((t, i) => (
+            <span key={i} style={{
+              padding: '0.2rem 0.6rem', borderRadius: '6px',
+              fontSize: '0.65rem', fontWeight: 600,
+              background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)',
+              border: `1px solid ${project.accent}25`, color: 'rgba(255,255,255,0.75)',
+            }}>
+              {t}
+            </span>
+          ))}
+          {project.tags.length > 3 && (
+            <span style={{ padding: '0.2rem 0.6rem', borderRadius: '6px', fontSize: '0.65rem', background: 'rgba(0,0,0,0.5)', color: 'rgba(255,255,255,0.4)' }}>
+              +{project.tags.length - 3}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* ── Card body ── */}
+      <div style={{ padding: '1.5rem 1.75rem' }}>
+        <div style={{ fontSize: '0.67rem', fontFamily: 'Space Mono, monospace', color: project.accent, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+          {project.subtitle}
+        </div>
+        <h3 className="syne" style={{ fontWeight: 800, fontSize: '1.18rem', color: 'white', marginBottom: '0.6rem', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
+          {project.title}
+        </h3>
+        <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.65, marginBottom: '1.2rem' }}>
+          {project.desc}
+        </p>
+
+        {/* Footer */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.28)' }}>
+            <CheckCircle2 size={12} style={{ color: project.accent }} />
+            {project.tasks.length} tâches réalisées
+          </span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: project.accent, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            Voir le détail <ArrowUpRight size={12} />
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  PROJECTS SECTION
+// ─────────────────────────────────────────────────────────────
+export default function Projects() {
+  const [selectedIdx, setSelectedIdx] = useState(null);
+
+  const openModal  = (i) => setSelectedIdx(i);
+  const closeModal = () => setSelectedIdx(null);
+  const goPrev = () => setSelectedIdx(i => (i - 1 + PROJECTS.length) % PROJECTS.length);
+  const goNext = () => setSelectedIdx(i => (i + 1) % PROJECTS.length);
+
+  return (
+    <section id="projects" style={{ padding: '7rem 3rem', position: 'relative', overflow: 'hidden' }}>
+      <div className="divider" />
+
+      {/* Ambient */}
+      <div style={{ position: 'absolute', top: '30%', left: '-5%', width: 550, height: 550, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.055) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: '10%', right: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,255,208,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+      <span className="watermark" style={{ right: '-2%', top: '5%' }}>03</span>
+
+      <div style={{ maxWidth: 960, margin: '0 auto', paddingTop: '3.5rem', position: 'relative', zIndex: 1 }}>
+
+        {/* Header */}
+        <motion.div className="section-label" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+          Portfolio
+        </motion.div>
+
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '3.5rem' }}
         >
-          <h3 className="text-brand-400 font-semibold tracking-widest uppercase mb-2">Portfolio</h3>
-          <h2 className="text-3xl md:text-5xl font-bold text-white">Projets Réalisés</h2>
-          <p className="text-zinc-400 mt-4 max-w-xl mx-auto">
+          <h2 className="syne" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.08 }}>
+            Projets <span className="text-grad">réalisés.</span>
+          </h2>
+          <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.88rem', maxWidth: 280, lineHeight: 1.65 }}>
             Cliquez sur un projet pour découvrir les tâches réalisées en détail.
           </p>
         </motion.div>
 
-        {/* Project Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {projects.map((project, idx) => (
-            <motion.div
+        {/* Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
+          {PROJECTS.map((project, i) => (
+            <ProjectCard
               key={project.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              onClick={() => setSelected(project)}
-              className="group cursor-pointer glass-panel rounded-2xl overflow-hidden border border-zinc-800 hover:border-brand-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-500/10"
-            >
-              {/* Project Image */}
-              <div className={`relative h-48 bg-gradient-to-br ${project.color} overflow-hidden`}>
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover mix-blend-overlay opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-500"
-                />
-                <div className="absolute inset-0 flex items-end p-4">
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.tech.slice(0, 3).map((t, i) => (
-                      <span key={i} className="px-2 py-0.5 bg-black/50 backdrop-blur-sm text-white/90 rounded text-xs font-medium">
-                        {t}
-                      </span>
-                    ))}
-                    {project.tech.length > 3 && (
-                      <span className="px-2 py-0.5 bg-black/50 backdrop-blur-sm text-white/60 rounded text-xs">
-                        +{project.tech.length - 3}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Project Info */}
-              <div className="p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xs text-brand-400 font-semibold tracking-wide uppercase mb-1">{project.subtitle}</p>
-                    <h3 className="text-lg font-bold text-white group-hover:text-brand-400 transition-colors">{project.title}</h3>
-                    <p className="text-zinc-400 text-sm mt-1 line-clamp-2">{project.description}</p>
-                  </div>
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center group-hover:bg-brand-500/20 transition-colors">
-                    <ExternalLink className="w-4 h-4 text-zinc-400 group-hover:text-brand-400 transition-colors" />
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-zinc-800 flex items-center gap-2 text-xs text-zinc-500">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-brand-400" />
-                  {project.tasks.length} tâches réalisées
-                </div>
-              </div>
-            </motion.div>
+              project={project}
+              index={i}
+              onClick={() => openModal(i)}
+            />
           ))}
         </div>
       </div>
 
       {/* Modal */}
-      {selected && <ProjectModal project={selected} onClose={() => setSelected(null)} />}
+      <AnimatePresence>
+        {selectedIdx !== null && (
+          <Modal
+            key={selectedIdx}
+            project={PROJECTS[selectedIdx]}
+            idx={selectedIdx}
+            total={PROJECTS.length}
+            onClose={closeModal}
+            onPrev={goPrev}
+            onNext={goNext}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Card hover styles */}
+      <style>{`
+        .project-card { cursor: none; }
+        .project-card:hover {
+          border-color: rgba(255,255,255,0.14) !important;
+          transform: translateY(-5px);
+          box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+        }
+        .project-card:hover .card-spotlight { opacity: 1 !important; }
+        .project-card:hover .card-arrow {
+          background: rgba(124,58,237,0.2) !important;
+          border-color: rgba(124,58,237,0.5) !important;
+          transform: rotate(45deg);
+        }
+        @media (max-width: 640px) {
+          #projects div[style*="repeat(2, 1fr)"] { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   );
 }
+

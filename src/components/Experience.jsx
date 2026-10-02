@@ -2,202 +2,168 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Calendar, ChevronDown } from 'lucide-react';
 
-const experiences = [
+const EXP = [
   {
-    role: "Ingénieur Logiciel",
-    company: "Infinity Management Group",
-    location: "Tunis, Tunisie",
-    period: "Sep 2024 – Aujourd'hui",
+    role:    'Ingénieur Logiciel',
+    company: 'Infinity Management Group',
+    loc:     'Tunis, Tunisie',
+    period:  "Sep 2024 – Aujourd'hui",
     current: true,
-    color: '#6c5fff',
+    accent:  '#7c3aed',
     items: [
       "Back-office national de santé : système centralisé avec données de référence et RBAC.",
       "Application Cold Chain : surveillance temps réel des réfrigérateurs médicaux + alertes automatiques.",
       "Application EPharma : circuit complet du médicament selon les exigences pharmaceutiques.",
-      "Portail applicatif institutionnel : SSO & Keycloak, permissions, traçabilité.",
+      "Portail applicatif institutionnel : SSO & Keycloak, gestion des permissions et traçabilité.",
       "EVax : contribution à la plateforme nationale de vaccination.",
-    ]
+    ],
   },
   {
-    role: "Stagiaire Ingénieur Logiciel",
-    company: "Infinity Management · Infinity Talents",
-    location: "Tunis, Tunisie",
-    period: "Fév – Sep 2024",
+    role:    'Stagiaire Ingénieur Logiciel',
+    company: 'Infinity Management · Infinity Talents',
+    loc:     'Tunis, Tunisie',
+    period:  'Fév – Sep 2024',
     current: false,
-    color: '#22d3ee',
+    accent:  '#00ffd0',
     items: [
-      "Développement du back-office complet d'une plateforme e-learning : utilisateurs, formateurs, apprenants, notifications.",
-    ]
+      "Back-office complet d'une plateforme e-learning : utilisateurs, formateurs, apprenants, notifications.",
+    ],
   },
   {
-    role: "Développeur Full-Stack · Temps partiel",
-    company: "Infinity Management Group",
-    location: "Tunis, Tunisie",
-    period: "Juin 2023 – Fév 2024",
+    role:    'Développeur Full-Stack · Temps partiel',
+    company: 'Infinity Management Group',
+    loc:     'Tunis, Tunisie',
+    period:  'Juin 2023 – Fév 2024',
     current: false,
-    color: '#a29eff',
+    accent:  '#a78bfa',
     items: [
-      "Site web corporate (infinitymgt.fr) sous WordPress : architecture du thème et optimisation.",
-      "Application e-Hiring : gestion de recrutement, scoring automatisé et matching candidat-offres.",
+      "Site web corporate (infinitymgt.fr) sous WordPress : architecture thème et optimisation.",
+      "Application e-Hiring : recrutement, scoring automatisé et matching candidat-offres.",
       "Génération automatique de CV standardisés « Infinity » pour l'analyse comparative des profils.",
-    ]
-  }
+    ],
+  },
 ];
 
 export default function Experience() {
-  const [expanded, setExpanded] = useState(0);
+  const [open, setOpen] = useState(0);
 
   return (
     <section id="experience" style={{ padding: '7rem 3rem', position: 'relative', overflow: 'hidden' }}>
-      <div className="section-divider" />
+      <div className="divider" />
 
-      <div style={{
-        position: 'absolute', bottom: '10%', left: '-5%',
-        width: 500, height: 500, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(34,211,238,0.05) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
+      <div style={{ position: 'absolute', bottom: '5%', left: '-5%', width: 520, height: 520, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,255,208,0.045) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-      <div style={{ maxWidth: 900, margin: '0 auto', paddingTop: '3rem' }}>
-        {/* Label */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="section-number"
-          style={{ marginBottom: '1.5rem' }}
-        >
-          <span>02</span>
-          <span>Expérience Professionnelle</span>
+      <span className="watermark" style={{ right: '-2%', top: '5%' }}>02</span>
+
+      <div style={{ maxWidth: 960, margin: '0 auto', paddingTop: '3.5rem', position: 'relative', zIndex: 1 }}>
+
+        <motion.div className="section-label" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+          Parcours
         </motion.div>
 
         <motion.h2
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          style={{
-            fontSize: 'clamp(2rem, 5vw, 3rem)',
-            fontWeight: 800, letterSpacing: '-0.03em',
-            marginBottom: '3.5rem', lineHeight: 1.15,
-          }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="syne"
+          style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.08, marginBottom: '3.5rem' }}
         >
           Ce que j'ai{' '}
-          <span className="text-gradient">construit jusqu'ici.</span>
+          <span className="text-grad">construit jusqu'ici.</span>
         </motion.h2>
 
-        {/* Timeline accordion */}
-        <div style={{ position: 'relative', paddingLeft: '2rem' }}>
-          {/* Timeline line */}
+        {/* Timeline */}
+        <div style={{ position: 'relative', paddingLeft: '2.25rem' }}>
+          {/* Vertical line */}
           <div style={{
-            position: 'absolute', left: '5px', top: '8px', bottom: '8px',
-            width: '1px',
-            background: 'linear-gradient(to bottom, rgba(108,95,255,0.6), rgba(34,211,238,0.3), rgba(255,255,255,0.05))',
+            position: 'absolute', left: '5px', top: 10, bottom: 10, width: 1,
+            background: 'linear-gradient(to bottom, rgba(124,58,237,0.7), rgba(0,255,208,0.3), rgba(255,255,255,0.04))',
           }} />
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {experiences.map((exp, index) => (
+            {EXP.map((exp, i) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -24 }}
+                key={i}
+                initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                style={{ position: 'relative' }}
               >
                 {/* Timeline dot */}
                 <div style={{
-                  position: 'absolute', left: '-1px',
-                  width: 12, height: 12, borderRadius: '50%',
-                  border: `2px solid ${exp.color}`,
-                  background: exp.current ? `${exp.color}33` : '#060609',
-                  boxShadow: exp.current ? `0 0 16px ${exp.color}55` : 'none',
-                  marginTop: '1.5rem',
+                  position: 'absolute', left: -27, top: 22,
+                  width: 11, height: 11, borderRadius: '50%',
+                  border: `2px solid ${exp.accent}`,
+                  background: exp.current ? `${exp.accent}30` : '#060609',
+                  boxShadow: exp.current ? `0 0 14px ${exp.accent}66` : 'none',
+                  zIndex: 2,
                 }}>
                   {exp.current && (
                     <div style={{
                       position: 'absolute', inset: '2px',
-                      borderRadius: '50%', background: exp.color,
-                      animation: 'pulse-dot 2s infinite',
+                      borderRadius: '50%', background: exp.accent,
+                      animation: 'pulse-ring 2s ease-out infinite',
                     }} />
                   )}
                 </div>
 
                 {/* Card */}
                 <div
-                  className="glass card-lift"
-                  style={{
-                    borderRadius: '16px', overflow: 'hidden',
-                    borderColor: expanded === index ? `${exp.color}30` : 'rgba(255,255,255,0.06)',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => setExpanded(expanded === index ? -1 : index)}
+                  className={`exp-card${open === i ? ' open' : ''}`}
+                  onClick={() => setOpen(open === i ? -1 : i)}
+                  style={{ borderLeftColor: open === i ? `${exp.accent}30` : undefined }}
                 >
-                  {/* Header */}
-                  <div style={{
-                    padding: '1.5rem 1.75rem',
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    gap: '1rem',
-                  }}>
+                  {/* ── Header ── */}
+                  <div className="exp-header">
                     <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.4rem' }}>
-                        <h3 style={{ fontWeight: 700, fontSize: '1.1rem', color: 'white' }}>
-                          {exp.role}
-                        </h3>
-                        {exp.current && (
-                          <span className="badge badge-cyan" style={{ fontSize: '0.65rem' }}>
-                            Actuel
-                          </span>
-                        )}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.45rem', flexWrap: 'wrap' }}>
+                        <h3 className="syne" style={{ fontWeight: 700, fontSize: '1.08rem', color: 'white' }}>{exp.role}</h3>
+                        {exp.current && <span className="badge badge-cyan" style={{ fontSize: '0.6rem' }}>Actuel</span>}
                       </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
-                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: exp.color }}>
-                          {exp.company}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.84rem', fontWeight: 600, color: exp.accent }}>{exp.company}</span>
+                        <span style={{ fontSize: '0.76rem', color: 'rgba(255,255,255,0.28)', display: 'flex', alignItems: 'center', gap: '0.28rem' }}>
+                          <MapPin size={10} /> {exp.loc}
                         </span>
-                        <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                          <MapPin size={11} /> {exp.location}
-                        </span>
-                        <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                          <Calendar size={11} /> {exp.period}
+                        <span style={{ fontSize: '0.76rem', color: 'rgba(255,255,255,0.28)', display: 'flex', alignItems: 'center', gap: '0.28rem' }}>
+                          <Calendar size={10} /> {exp.period}
                         </span>
                       </div>
                     </div>
                     <motion.div
-                      animate={{ rotate: expanded === index ? 180 : 0 }}
-                      transition={{ duration: 0.25 }}
-                      style={{ color: 'rgba(255,255,255,0.3)', flexShrink: 0 }}
+                      animate={{ rotate: open === i ? 180 : 0 }}
+                      transition={{ duration: 0.28, ease: 'easeInOut' }}
+                      style={{ color: 'rgba(255,255,255,0.28)', flexShrink: 0 }}
                     >
-                      <ChevronDown size={18} />
+                      <ChevronDown size={17} />
                     </motion.div>
                   </div>
 
-                  {/* Expanded items */}
-                  <AnimatePresence>
-                    {expanded === index && (
+                  {/* ── Expanded body ── */}
+                  <AnimatePresence initial={false}>
+                    {open === i && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
                         style={{ overflow: 'hidden' }}
                       >
-                        <div style={{
-                          padding: '0 1.75rem 1.75rem',
-                          borderTop: `1px solid ${exp.color}18`,
-                          marginTop: 0,
-                        }}>
-                          <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingTop: '1.25rem' }}>
-                            {exp.items.map((item, i) => (
-                              <li key={i} style={{
-                                display: 'flex', gap: '0.75rem', alignItems: 'flex-start',
-                                color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem', lineHeight: 1.6,
-                              }}>
-                                <span style={{
-                                  width: 6, height: 6, borderRadius: '50%',
-                                  background: exp.color, flexShrink: 0, marginTop: '0.55rem',
-                                }} />
+                        <div style={{ padding: '0 1.75rem 1.75rem', borderTop: `1px solid ${exp.accent}14`, paddingTop: '1.2rem' }}>
+                          <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+                            {exp.items.map((item, j) => (
+                              <motion.li
+                                key={j}
+                                initial={{ opacity: 0, x: -8 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: j * 0.05, duration: 0.3 }}
+                                style={{ display: 'flex', gap: '0.7rem', alignItems: 'flex-start', color: 'rgba(255,255,255,0.48)', fontSize: '0.88rem', lineHeight: 1.65 }}
+                              >
+                                <span style={{ width: 5, height: 5, borderRadius: '50%', background: exp.accent, flexShrink: 0, marginTop: '0.55rem' }} />
                                 {item}
-                              </li>
+                              </motion.li>
                             ))}
                           </ul>
                         </div>

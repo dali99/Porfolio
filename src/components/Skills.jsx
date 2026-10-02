@@ -1,177 +1,170 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const categories = [
-  {
-    label: 'Backend',
-    color: '#6c5fff',
-    skills: ['Java', 'Spring Boot', 'Django REST', 'APIs RESTful', 'Microservices', 'Python'],
-  },
-  {
-    label: 'Frontend',
-    color: '#22d3ee',
-    skills: ['React.js', 'Next.js', 'JavaScript', 'React Query', 'Tailwind CSS'],
-  },
-  {
-    label: 'DevOps',
-    color: '#a29eff',
-    skills: ['Docker', 'CI/CD Pipelines', 'GitLab CI', 'Git', 'GitHub'],
-  },
-  {
-    label: 'Bases de données',
-    color: '#f59e0b',
-    skills: ['PostgreSQL', 'MySQL'],
-  },
-  {
-    label: 'Sécurité & Auth',
-    color: '#34d399',
-    skills: ['Keycloak', 'SSO', 'OAuth2', 'RBAC'],
-  },
-  {
-    label: 'Concepts',
-    color: '#f472b6',
-    skills: ['Architecture Propre', 'SaaS Multi-tenant', 'Agile / Scrum', 'C', 'C++', 'WordPress'],
-  },
+// ─────────────────────────────────────────────────────────────
+//  DATA
+// ─────────────────────────────────────────────────────────────
+const CATS = [
+  { label: 'Backend',        color: '#7c3aed', skills: ['Java', 'Spring Boot', 'Django REST', 'Python', 'APIs RESTful', 'Microservices'] },
+  { label: 'Frontend',       color: '#00ffd0', skills: ['React.js', 'Next.js', 'JavaScript', 'React Query', 'Tailwind CSS'] },
+  { label: 'DevOps',         color: '#a78bfa', skills: ['Docker', 'CI/CD Pipelines', 'GitLab CI', 'Git', 'GitHub'] },
+  { label: 'Bases de données', color: '#fbbf24', skills: ['PostgreSQL', 'MySQL'] },
+  { label: 'Sécurité',       color: '#34d399', skills: ['Keycloak', 'SSO', 'OAuth2', 'RBAC'] },
+  { label: 'Concepts',       color: '#f472b6', skills: ['Architecture Propre', 'SaaS Multi-tenant', 'Agile / Scrum', 'C', 'C++'] },
 ];
 
+// ─── marquee rows ─────────────────────────────────────────────
+const ALL_SKILLS_1 = [
+  'Java', 'Spring Boot', 'React.js', 'Docker', 'PostgreSQL',
+  'Keycloak', 'Next.js', 'Django REST', 'CI/CD', 'SSO',
+  'Git', 'Python', 'Microservices', 'OAuth2',
+];
+const ALL_SKILLS_2 = [
+  'RBAC', 'MySQL', 'GitLab CI', 'React Query', 'Tailwind CSS',
+  'Architecture Propre', 'SaaS', 'Agile', 'Scrum', 'JavaScript',
+  'C++', 'APIs RESTful', 'WordPress', 'Docker Compose',
+];
+
+function MarqueeRow({ items, dir }) {
+  const doubled = [...items, ...items];
+  return (
+    <div className="marquee-wrap">
+      <div className={`marquee-track ${dir === 'left' ? 'go-left' : 'go-right'}`}>
+        {doubled.map((s, i) => (
+          <span key={i} className="marquee-item">{s}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  SKILLS
+// ─────────────────────────────────────────────────────────────
 export default function Skills() {
-  const [active, setActive] = useState(null);
+  const [hovered, setHovered] = useState(null);
 
   return (
     <section id="skills" style={{ padding: '7rem 3rem', position: 'relative', overflow: 'hidden' }}>
-      <div className="section-divider" />
+      <div className="divider" />
 
-      <div style={{
-        position: 'absolute', top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 600, height: 600, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(108,95,255,0.04) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
+      <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-      <div style={{ maxWidth: 900, margin: '0 auto', paddingTop: '3rem' }}>
-        {/* Label */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="section-number"
-          style={{ marginBottom: '1.5rem' }}
-        >
-          <span>04</span>
-          <span>Compétences Techniques</span>
+      <span className="watermark" style={{ right: '-2%', top: '5%' }}>05</span>
+
+      <div style={{ maxWidth: 960, margin: '0 auto', paddingTop: '3.5rem', position: 'relative', zIndex: 1 }}>
+
+        <motion.div className="section-label" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+          Expertise
         </motion.div>
 
         <motion.h2
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          style={{
-            fontSize: 'clamp(2rem, 5vw, 3rem)',
-            fontWeight: 800, letterSpacing: '-0.03em',
-            marginBottom: '1rem', lineHeight: 1.15,
-          }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="syne"
+          style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.08, marginBottom: '3.5rem' }}
         >
           Mon arsenal{' '}
-          <span className="text-gradient">technique.</span>
+          <span className="text-grad">technique.</span>
         </motion.h2>
 
-        <motion.p
+        {/* ── MARQUEE ROWS ── */}
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          style={{ color: 'rgba(255,255,255,0.35)', marginBottom: '3.5rem', fontSize: '0.95rem' }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          style={{ marginBottom: '4rem', marginLeft: '-3rem', marginRight: '-3rem' }}
         >
-          Survolez une catégorie pour explorer les technologies.
-        </motion.p>
-
-        {/* Category filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '2.5rem' }}
-        >
-          <button
-            onClick={() => setActive(null)}
-            style={{
-              padding: '0.4rem 1rem', borderRadius: '8px',
-              fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
-              background: active === null ? 'rgba(108,95,255,0.2)' : 'transparent',
-              border: `1px solid ${active === null ? 'rgba(108,95,255,0.4)' : 'rgba(255,255,255,0.07)'}`,
-              color: active === null ? '#a29eff' : 'rgba(255,255,255,0.4)',
-              transition: 'all 0.2s',
-            }}
-          >
-            Tout
-          </button>
-          {categories.map((cat, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(active === i ? null : i)}
-              style={{
-                padding: '0.4rem 1rem', borderRadius: '8px',
-                fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
-                background: active === i ? `${cat.color}18` : 'transparent',
-                border: `1px solid ${active === i ? `${cat.color}40` : 'rgba(255,255,255,0.07)'}`,
-                color: active === i ? cat.color : 'rgba(255,255,255,0.4)',
-                transition: 'all 0.2s',
-              }}
-            >
-              {cat.label}
-            </button>
-          ))}
+          <MarqueeRow items={ALL_SKILLS_1} dir="left"  />
+          <MarqueeRow items={ALL_SKILLS_2} dir="right" />
         </motion.div>
 
-        {/* Skills grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
-          {categories.map((cat, i) => (
+        {/* ── CATEGORY FILTER ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          style={{ marginBottom: '1.25rem' }}
+        >
+          <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.3)', marginBottom: '1rem', fontFamily: 'Space Mono, monospace' }}>
+            // Survolez une catégorie
+          </p>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '2rem' }}>
+            <button
+              onClick={() => setHovered(null)}
+              style={{
+                padding: '0.38rem 1rem', borderRadius: '8px',
+                fontSize: '0.78rem', fontWeight: 600, border: 'none',
+                background: hovered === null ? 'rgba(124,58,237,0.18)' : 'transparent',
+                border: `1px solid ${hovered === null ? 'rgba(124,58,237,0.4)' : 'rgba(255,255,255,0.07)'}`,
+                color: hovered === null ? '#a78bfa' : 'rgba(255,255,255,0.38)',
+                transition: 'all 0.2s', fontFamily: 'Inter, sans-serif',
+              }}
+            >
+              Tout
+            </button>
+            {CATS.map((cat, i) => (
+              <button
+                key={i}
+                onClick={() => setHovered(hovered === i ? null : i)}
+                style={{
+                  padding: '0.38rem 1rem', borderRadius: '8px',
+                  fontSize: '0.78rem', fontWeight: 600, border: 'none',
+                  background: hovered === i ? `${cat.color}18` : 'transparent',
+                  border: `1px solid ${hovered === i ? `${cat.color}40` : 'rgba(255,255,255,0.07)'}`,
+                  color: hovered === i ? cat.color : 'rgba(255,255,255,0.38)',
+                  transition: 'all 0.2s', fontFamily: 'Inter, sans-serif',
+                }}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* ── SKILL GRID ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+          {CATS.map((cat, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, scale: 0.96 }}
+              initial={{ opacity: 0, scale: 0.97 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="glass card-lift"
+              transition={{ duration: 0.4, delay: i * 0.07 }}
+              className="card"
               style={{
+                padding: '1.6rem',
                 borderRadius: '16px',
-                padding: '1.5rem',
-                opacity: active !== null && active !== i ? 0.35 : 1,
-                transition: 'opacity 0.3s ease',
-                cursor: 'default',
-                borderColor: active === i ? `${cat.color}30` : undefined,
+                opacity: hovered !== null && hovered !== i ? 0.32 : 1,
+                borderColor: hovered === i ? `${cat.color}28` : undefined,
+                transition: 'opacity 0.3s ease, border-color 0.3s ease',
               }}
-              onMouseEnter={() => setActive(i)}
-              onMouseLeave={() => setActive(null)}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
             >
-              <div className="skill-category-header">
-                <span style={{
-                  width: 8, height: 8, borderRadius: '50%',
-                  background: cat.color,
-                  boxShadow: `0 0 12px ${cat.color}80`,
-                }} />
-                <span style={{ fontWeight: 700, fontSize: '0.85rem', color: cat.color, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1rem', paddingBottom: '0.85rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: cat.color, boxShadow: `0 0 10px ${cat.color}80`, flexShrink: 0 }} />
+                <span className="mono" style={{ fontSize: '0.72rem', fontWeight: 700, color: cat.color, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                   {cat.label}
                 </span>
               </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+
+              {/* Pills */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
                 {cat.skills.map((skill, j) => (
-                  <motion.span
+                  <span
                     key={j}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: j * 0.04 }}
-                    className="hex-skill"
-                    style={{
-                      borderColor: active === i ? `${cat.color}25` : undefined,
-                    }}
+                    className="skill-pill"
+                    style={{ borderColor: hovered === i ? `${cat.color}20` : undefined }}
                   >
                     {skill}
-                  </motion.span>
+                  </span>
                 ))}
               </div>
             </motion.div>
@@ -181,7 +174,7 @@ export default function Skills() {
 
       <style>{`
         @media (max-width: 640px) {
-          #skills > div > div:last-child { grid-template-columns: 1fr !important; }
+          #skills div[style*="repeat(2, 1fr)"] { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>

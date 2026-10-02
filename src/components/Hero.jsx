@@ -1,329 +1,369 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Download, ChevronDown } from 'lucide-react';
+import { ArrowRight, ArrowDown } from 'lucide-react';
 
-const roles = [
-  "Ingénieur Full-Stack",
-  "Architecte SaaS",
-  "Développeur Spring Boot",
-  "Expert React & Next.js",
+// ─────────────────────────────────────────────────────────────
+//  TYPEWRITER
+// ─────────────────────────────────────────────────────────────
+const ROLES = [
+  'Ingénieur Full-Stack',
+  'Architecte SaaS',
+  'Développeur Spring Boot',
+  'Expert React & Next.js',
 ];
 
-function TypewriterText({ words }) {
-  const [currentWord, setCurrentWord] = useState(0);
-  const [displayed, setDisplayed] = useState('');
+function Typewriter() {
+  const [idx,      setIdx]      = useState(0);
+  const [text,     setText]     = useState('');
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    let timeout;
-    const word = words[currentWord];
-    if (!deleting && displayed.length < word.length) {
-      timeout = setTimeout(() => setDisplayed(word.slice(0, displayed.length + 1)), 55);
-    } else if (!deleting && displayed.length === word.length) {
-      timeout = setTimeout(() => setDeleting(true), 2800);
-    } else if (deleting && displayed.length > 0) {
-      timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 25);
-    } else if (deleting && displayed.length === 0) {
+    const word = ROLES[idx];
+    let t;
+    if (!deleting && text.length < word.length) {
+      t = setTimeout(() => setText(word.slice(0, text.length + 1)), 52);
+    } else if (!deleting && text.length === word.length) {
+      t = setTimeout(() => setDeleting(true), 2600);
+    } else if (deleting && text.length > 0) {
+      t = setTimeout(() => setText(text.slice(0, -1)), 24);
+    } else {
       setDeleting(false);
-      setCurrentWord((prev) => (prev + 1) % words.length);
+      setIdx(p => (p + 1) % ROLES.length);
     }
-    return () => clearTimeout(timeout);
-  }, [displayed, deleting, currentWord, words]);
+    return () => clearTimeout(t);
+  }, [text, deleting, idx]);
 
   return (
     <span>
-      <span className="text-gradient">{displayed}</span>
-      <span style={{ color: '#6c5fff', animation: 'pulse 1s infinite', fontWeight: 300 }}>|</span>
+      <span style={{ color: 'rgba(255,255,255,0.38)' }}>{text}</span>
+      <span style={{ color: '#7c3aed', fontWeight: 300, opacity: 0.9 }}>|</span>
     </span>
   );
 }
 
-// Floating code snippets decoration
-const codeSnippets = [
-  { text: 'const dev = new Engineer();', x: '68%', y: '20%', delay: 0 },
-  { text: '@SpringBootApplication', x: '72%', y: '45%', delay: 0.5 },
-  { text: 'docker-compose up -d', x: '65%', y: '68%', delay: 1 },
-  { text: 'git push origin main', x: '70%', y: '82%', delay: 1.5 },
+// ─────────────────────────────────────────────────────────────
+//  MAGNETIC BUTTON
+// ─────────────────────────────────────────────────────────────
+function MagBtn({ href, className, children, style }) {
+  const wrap = useRef(null);
+
+  const onMove = useCallback((e) => {
+    const el = wrap.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width  / 2;
+    const y = e.clientY - r.top  - r.height / 2;
+    el.style.transform = `translate(${x * 0.28}px, ${y * 0.28}px)`;
+  }, []);
+
+  const onLeave = useCallback(() => {
+    if (wrap.current) wrap.current.style.transform = 'translate(0,0)';
+  }, []);
+
+  return (
+    <div
+      ref={wrap}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ display: 'inline-block', transition: 'transform 0.45s cubic-bezier(0.16,1,0.3,1)', ...style }}
+    >
+      <a href={href} className={className}>{children}</a>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  FLOATING CODE SNIPPETS
+// ─────────────────────────────────────────────────────────────
+const CODE_LINES = [
+  { text: 'const engineer = new FullStack();' },
+  { text: '@SpringBootApplication',            },
+  { text: 'docker compose up --build',         },
+  { text: 'git push origin feat/saas-v3',      },
+  { text: 'SELECT * FROM impact WHERE real=1', },
 ];
 
-export default function Hero() {
+// ─────────────────────────────────────────────────────────────
+//  PARTICLE CANVAS
+// ─────────────────────────────────────────────────────────────
+function ParticleCanvas() {
   const canvasRef = useRef(null);
+  const mouseRef  = useRef({ x: -999, y: -999 });
 
-  // Dot grid canvas animation
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let animFrame;
-    let time = 0;
+    let raf;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      canvas.width  = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+      canvas._w = w; canvas._h = h;
     };
     resize();
     window.addEventListener('resize', resize);
 
+    const onMouse = (e) => {
+      const r = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - r.left, y: e.clientY - r.top };
+    };
+    window.addEventListener('mousemove', onMouse);
+
+    const W = () => canvas._w || canvas.width / dpr;
+    const H = () => canvas._h || canvas.height / dpr;
+
+    const N = Math.min(90, Math.floor((W() * H()) / 12000));
+    const pts = Array.from({ length: N }, () => ({
+      x:  Math.random() * W(),
+      y:  Math.random() * H(),
+      vx: (Math.random() - 0.5) * 0.45,
+      vy: (Math.random() - 0.5) * 0.45,
+      r:  Math.random() * 1.2 + 0.4,
+      cyan: Math.random() > 0.72,
+    }));
+
     const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const spacing = 40;
-      const cols = Math.ceil(canvas.width / spacing) + 1;
-      const rows = Math.ceil(canvas.height / spacing) + 1;
+      ctx.clearRect(0, 0, W(), H());
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
 
-      for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-          const x = i * spacing;
-          const y = j * spacing;
-          const dist = Math.sqrt(
-            Math.pow(x - canvas.width * 0.35, 2) +
-            Math.pow(y - canvas.height * 0.5, 2)
-          );
-          const wave = Math.sin(time * 0.8 + dist * 0.012) * 0.5 + 0.5;
-          const alpha = wave * 0.18 * (1 - Math.min(dist / (canvas.width * 0.7), 1));
+      pts.forEach(p => {
+        // Mouse repulsion
+        const dx = p.x - mx, dy = p.y - my;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 170 && d > 0) {
+          const f = ((170 - d) / 170) * 0.9;
+          p.vx += (dx / d) * f;
+          p.vy += (dy / d) * f;
+        }
+        // Speed cap + damping
+        const spd = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (spd > 2.2) { p.vx *= 2.2 / spd; p.vy *= 2.2 / spd; }
+        p.vx *= 0.978; p.vy *= 0.978;
+        p.x  += p.vx;  p.y  += p.vy;
+        // Wrap
+        if (p.x < -10) p.x = W() + 10; if (p.x > W() + 10) p.x = -10;
+        if (p.y < -10) p.y = H() + 10; if (p.y > H() + 10) p.y = -10;
+      });
 
-          ctx.beginPath();
-          ctx.arc(x, y, 1.2, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(108, 95, 255, ${alpha})`;
-          ctx.fill();
+      // Connections
+      const LINK = 115;
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < LINK) {
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = `rgba(167,139,250,${(1 - d / LINK) * 0.22})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
         }
       }
-      time += 0.04;
-      animFrame = requestAnimationFrame(draw);
+
+      // Dots
+      pts.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.cyan ? 'rgba(0,255,208,0.75)' : 'rgba(167,139,250,0.75)';
+        ctx.fill();
+      });
+
+      raf = requestAnimationFrame(draw);
     };
     draw();
 
     return () => {
-      cancelAnimationFrame(animFrame);
+      cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onMouse);
     };
   }, []);
 
   return (
+    <canvas
+      ref={canvasRef}
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.82 }}
+    />
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  HERO
+// ─────────────────────────────────────────────────────────────
+export default function Hero() {
+  const S = { // shared inline style shorthand
+    abs: { position: 'absolute' },
+  };
+
+  return (
     <section
       id="hero"
-      style={{
-        position: 'relative',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden',
-        background: '#060609',
-      }}
+      style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#060609' }}
     >
-      {/* Animated dot grid canvas */}
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          opacity: 0.9,
-        }}
-      />
+      <ParticleCanvas />
 
       {/* Ambient glows */}
-      <div style={{
-        position: 'absolute', top: '20%', left: '10%',
-        width: 600, height: 600, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(108,95,255,0.09) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'absolute', bottom: '10%', right: '15%',
-        width: 400, height: 400, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(34,211,238,0.06) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
+      <div style={{ ...S.abs, top: '8%',  left: '-2%', width: 760, height: 760, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.075) 0%, transparent 62%)', pointerEvents: 'none' }} />
+      <div style={{ ...S.abs, bottom: '0', right: '-4%', width: 520, height: 520, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,255,208,0.045) 0%, transparent 65%)', pointerEvents: 'none' }} />
 
-      {/* Content */}
-      <div style={{
-        position: 'relative', zIndex: 10,
-        maxWidth: 900, margin: '0 auto', padding: '0 3rem',
-        paddingTop: '6rem',
-      }}>
+      {/* Background watermark */}
+      <span className="watermark" style={{ right: '-1%', bottom: '-5%' }}>00</span>
 
-        {/* Section number */}
+      {/* ── Main content ── */}
+      <div style={{ position: 'relative', zIndex: 10, maxWidth: 1020, margin: '0 auto', padding: '9rem 3rem 4rem', width: '100%' }}>
+
+        {/* Section label */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="section-number"
+          className="section-label"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
           style={{ marginBottom: '2rem' }}
         >
-          <span>00</span>
-          <span>Introduction</span>
+          Ingénieur Logiciel Full-Stack
         </motion.div>
 
         {/* Available badge */}
         <motion.div
-          initial={{ opacity: 0, y: -16 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          style={{ marginBottom: '2rem' }}
+          transition={{ delay: 0.48, duration: 0.55 }}
+          style={{ marginBottom: '2.25rem' }}
         >
-          <span className="badge badge-cyan" style={{ fontSize: '0.72rem' }}>
-            <span className="live-dot" />
+          <span className="badge badge-cyan">
+            <span className="pulse-dot" style={{ position: 'relative' }} />
             Disponible immédiatement
           </span>
         </motion.div>
 
-        {/* Name */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            fontSize: 'clamp(3.5rem, 8vw, 7rem)',
-            fontWeight: 900,
-            lineHeight: 1,
-            letterSpacing: '-0.04em',
-            marginBottom: '1.25rem',
-            fontFamily: 'Outfit, sans-serif',
-          }}
-        >
-          <span style={{ color: 'rgba(255,255,255,0.85)' }}>Mohamedali</span>
-          <br />
-          <span className="text-gradient-subtle">MAGRI</span>
-        </motion.h1>
+        {/* Name — slide up from hidden overflow */}
+        <h1 style={{
+          fontFamily: 'Syne, sans-serif', fontWeight: 800,
+          fontSize: 'clamp(3.8rem, 9vw, 8.5rem)',
+          lineHeight: 0.93, letterSpacing: '-0.04em',
+          marginBottom: '1.6rem',
+        }}>
+          <div style={{ overflow: 'hidden' }}>
+            <motion.span
+              initial={{ y: '105%' }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              style={{ display: 'block', color: 'rgba(255,255,255,0.52)', fontWeight: 600 }}
+            >
+              Mohamedali
+            </motion.span>
+          </div>
+          <div style={{ overflow: 'hidden' }}>
+            <motion.span
+              initial={{ y: '105%' }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              className="text-grad"
+              style={{ display: 'block' }}
+            >
+              MAGRI
+            </motion.span>
+          </div>
+        </h1>
 
-        {/* Role typewriter */}
+        {/* Typewriter role */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          style={{
-            fontSize: 'clamp(1.3rem, 3vw, 2rem)',
-            fontWeight: 500,
-            marginBottom: '2rem',
-            height: '2.5rem',
-            color: 'rgba(255,255,255,0.5)',
-          }}
+          transition={{ delay: 0.92, duration: 0.6 }}
+          style={{ fontSize: 'clamp(1.1rem, 2.4vw, 1.45rem)', marginBottom: '2.25rem', height: '2rem', fontWeight: 400 }}
         >
-          <TypewriterText words={roles} />
+          <Typewriter />
         </motion.div>
 
         {/* Description */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.8 }}
-          style={{
-            color: 'rgba(255,255,255,0.4)',
-            fontSize: '1.1rem',
-            lineHeight: 1.7,
-            maxWidth: 520,
-            marginBottom: '3rem',
-          }}
+          transition={{ delay: 1.0, duration: 0.7 }}
+          style={{ maxWidth: 460, color: 'rgba(255,255,255,0.38)', lineHeight: 1.82, fontSize: '1rem', marginBottom: '3rem' }}
         >
-          Conception et développement de plateformes SaaS scalables et de solutions
-          de santé digitale robustes — avec une passion pour l'architecture propre
-          et les produits à fort impact.
+          Conception et développement de plateformes SaaS scalables et de solutions de santé digitale.
+          Architecture propre, code maintenable, impact réel.
         </motion.p>
 
-        {/* CTAs */}
+        {/* CTAs — magnetic */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.7 }}
+          transition={{ delay: 1.1, duration: 0.7 }}
           style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
         >
-          <a href="#experience" className="btn-primary">
-            Voir mon parcours
-            <ArrowRight size={16} />
-          </a>
-          <a href="#contact" className="btn-outline">
+          <MagBtn href="#experience" className="btn btn-violet">
+            Voir mon parcours <ArrowRight size={15} />
+          </MagBtn>
+          <MagBtn href="#contact" className="btn btn-ghost">
             Me contacter
-          </a>
+          </MagBtn>
         </motion.div>
 
         {/* Stats row */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          style={{
-            display: 'flex', gap: '3rem', marginTop: '5rem',
-            paddingTop: '2rem',
-            borderTop: '1px solid rgba(255,255,255,0.05)',
-            flexWrap: 'wrap',
-          }}
+          transition={{ delay: 1.38, duration: 0.8 }}
+          style={{ display: 'flex', gap: '3.5rem', marginTop: '5.5rem', paddingTop: '2.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', flexWrap: 'wrap' }}
         >
-          {[
-            { value: '2+', label: "Ans d'expérience" },
-            { value: '10+', label: 'Projets livrés' },
-            { value: '5+', label: 'Solutions SaaS' },
-          ].map((stat, i) => (
-            <div key={i}>
-              <div style={{
-                fontSize: '2rem', fontWeight: 800,
-                background: 'linear-gradient(135deg, #fff 0%, #a29eff 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                lineHeight: 1,
-                marginBottom: '0.25rem',
-              }}>
-                {stat.value}
+          {[['2+', "Ans d'expérience"], ['10+', 'Projets livrés'], ['5+', 'Solutions SaaS']].map(([v, l]) => (
+            <div key={l}>
+              <div className="syne" style={{ fontSize: '2.6rem', fontWeight: 800, lineHeight: 1, background: 'linear-gradient(135deg, #fff 0%, #a78bfa 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                {v}
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>
-                {stat.label}
-              </div>
+              <div style={{ fontSize: '0.76rem', color: 'rgba(255,255,255,0.3)', marginTop: '0.3rem', fontWeight: 500 }}>{l}</div>
             </div>
           ))}
         </motion.div>
       </div>
 
-      {/* Floating code snippets */}
-      {codeSnippets.map((snippet, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: [0, -8, 0] }}
-          transition={{
-            opacity: { delay: 1.5 + snippet.delay, duration: 0.8 },
-            y: { delay: 1.5 + snippet.delay, duration: 4, repeat: Infinity, ease: 'easeInOut' },
-          }}
-          style={{
-            position: 'absolute',
-            left: snippet.x, top: snippet.y,
-            fontFamily: 'Space Mono, monospace',
-            fontSize: '0.7rem',
-            color: 'rgba(108,95,255,0.4)',
-            background: 'rgba(108,95,255,0.04)',
-            border: '1px solid rgba(108,95,255,0.1)',
-            padding: '0.4rem 0.8rem',
-            borderRadius: '8px',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-          }}
-        >
-          {snippet.text}
-        </motion.div>
-      ))}
+      {/* Floating code blocks — desktop only */}
+      <div className="hide-mobile" style={{ position: 'absolute', right: '3rem', top: '50%', transform: 'translateY(-50%)', display: 'flex', flexDirection: 'column', gap: '0.8rem', pointerEvents: 'none', zIndex: 5 }}>
+        {CODE_LINES.map((item, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: 36 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ opacity: { delay: 1.6 + i * 0.15, duration: 0.6 }, x: { delay: 1.6 + i * 0.15, duration: 0.6 } }}
+            style={{ animation: `${i % 2 === 0 ? 'float-up' : 'float-down'} ${3.8 + i * 0.6}s ease-in-out infinite`, animationDelay: `${i * 0.4}s` }}
+          >
+            <div style={{
+              fontFamily: 'Space Mono, monospace', fontSize: '0.66rem',
+              color: 'rgba(167,139,250,0.42)',
+              background: 'rgba(124,58,237,0.045)',
+              border: '1px solid rgba(124,58,237,0.1)',
+              padding: '0.48rem 0.85rem', borderRadius: '8px', whiteSpace: 'nowrap',
+            }}>
+              <span style={{ color: 'rgba(0,255,208,0.35)', marginRight: '0.4rem' }}>›</span>
+              {item.text}
+            </div>
+          </motion.div>
+        ))}
+      </div>
 
       {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        style={{
-          position: 'absolute', bottom: '2.5rem', left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem',
-          cursor: 'pointer',
-        }}
+        transition={{ delay: 2.2, duration: 1 }}
         onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+        style={{ position: 'absolute', bottom: '2.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', zIndex: 10 }}
+        data-hover
       >
-        <motion.span
-          style={{ fontSize: '0.65rem', letterSpacing: '0.25em', color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', fontWeight: 700 }}
-        >
-          Scroll
-        </motion.span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-        >
-          <ChevronDown size={16} color="rgba(108,95,255,0.5)" />
+        <span className="mono" style={{ fontSize: '0.58rem', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.18)', textTransform: 'uppercase' }}>Scroll</span>
+        <motion.div animate={{ y: [0, 7, 0] }} transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}>
+          <ArrowDown size={13} color="rgba(124,58,237,0.55)" />
         </motion.div>
       </motion.div>
     </section>
