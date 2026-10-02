@@ -1,92 +1,189 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, Rocket, Shield, Coffee } from 'lucide-react';
+import { Briefcase, Rocket, Clock, Globe } from 'lucide-react';
 
-const stats = [
-  { icon: <Briefcase className="w-5 h-5" />, value: "2+", label: "Années d'expérience" },
-  { icon: <Rocket className="w-5 h-5" />, value: "10+", label: "Projets livrés" },
-  { icon: <Shield className="w-5 h-5" />, value: "5+", label: "Solutions SaaS" },
-  { icon: <Coffee className="w-5 h-5" />, value: "∞", label: "Cafés consommés" },
+// Live timer — counts since Sep 2024
+function LiveTimer() {
+  const start = new Date('2024-09-01T09:00:00');
+  const [elapsed, setElapsed] = useState('');
+
+  useEffect(() => {
+    const update = () => {
+      const now = new Date();
+      const diff = now - start;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+      setElapsed(
+        `${days}j ${String(hours).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`
+      );
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: '0.5rem',
+      fontFamily: 'Space Mono, monospace',
+      fontSize: '0.85rem', color: '#22d3ee',
+      background: 'rgba(34,211,238,0.06)',
+      border: '1px solid rgba(34,211,238,0.15)',
+      padding: '0.5rem 1rem', borderRadius: '10px',
+    }}>
+      <span className="live-dot" />
+      <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.7rem', marginRight: '0.25rem' }}>
+        En poste depuis :
+      </span>
+      {elapsed}
+    </div>
+  );
+}
+
+const traits = [
+  {
+    icon: <Briefcase size={18} />,
+    title: "Full-Stack Expert",
+    desc: "Spring Boot & React.js — du backend métier au frontend élaboré.",
+  },
+  {
+    icon: <Globe size={18} />,
+    title: "SaaS & Santé Digitale",
+    desc: "Architectures multi-tenant, RBAC, SSO Keycloak, plateformes nationales.",
+  },
+  {
+    icon: <Rocket size={18} />,
+    title: "DevOps & Qualité",
+    desc: "Docker, CI/CD GitLab, code maintenable et architectures propres.",
+  },
 ];
 
 export default function About() {
   return (
-    <section id="about" className="py-24 relative overflow-hidden">
-      {/* Section top divider */}
-      <div className="section-divider mb-0" />
-      
-      <div className="max-w-6xl mx-auto px-6 pt-16">
+    <section id="about" style={{ padding: '7rem 3rem', position: 'relative', overflow: 'hidden' }}>
+      <div className="section-divider" />
+
+      {/* Ambient */}
+      <div style={{
+        position: 'absolute', top: '-10%', right: '-5%',
+        width: 500, height: 500, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(108,95,255,0.06) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ maxWidth: 900, margin: '0 auto', paddingTop: '3rem' }}>
+        {/* Section label */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
+          transition={{ duration: 0.5 }}
+          className="section-number"
+          style={{ marginBottom: '1.5rem' }}
         >
-          <h3 className="text-brand-400 font-semibold tracking-widest uppercase mb-2 text-sm">Profil</h3>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white">À propos de moi</h2>
+          <span>01</span>
+          <span>À propos de moi</span>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-          {/* Main bio card */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="lg:col-span-3"
-          >
-            <div className="glass-panel p-8 md:p-10 rounded-3xl relative overflow-hidden h-full card-hover">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/6 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-600/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          style={{
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontWeight: 800, letterSpacing: '-0.03em',
+            marginBottom: '3rem',
+            lineHeight: 1.1,
+          }}
+        >
+          Construire des produits qui ont
+          <br />
+          <span className="text-gradient">un impact réel.</span>
+        </motion.h2>
 
-              <div className="relative z-10 space-y-5">
-                <p className="text-zinc-300 text-lg leading-relaxed">
-                  <strong className="text-white font-semibold">Ingénieur Logiciel Full-Stack</strong> avec plus de{' '}
-                  <span className="text-brand-300 font-medium">2 ans d'expérience</span> dans le développement de plateformes SaaS à grande échelle,
-                  principalement dans le domaine de la santé digitale.
-                </p>
-                <p className="text-zinc-300 text-lg leading-relaxed">
-                  Je maîtrise le développement backend (Spring Boot, Django REST) et frontend (React.js, Next.js),
-                  avec une expertise confirmée en intégration SSO/
-                  <span className="text-brand-300 font-medium">Keycloak</span>, pipelines{' '}
-                  <span className="text-brand-300 font-medium">CI/CD</span> et conteneurisation{' '}
-                  <span className="text-brand-300 font-medium">Docker</span>.
-                </p>
-                <p className="text-zinc-400 leading-relaxed">
-                  Passionné par les architectures propres, les défis techniques complexes et les produits qui ont un impact réel sur les utilisateurs.
-                </p>
+        {/* Live timer */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          style={{ marginBottom: '3rem' }}
+        >
+          <LiveTimer />
+        </motion.div>
+
+        {/* Bio */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          style={{
+            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem',
+            marginBottom: '4rem',
+          }}
+          className="about-grid"
+        >
+          <p style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.8, fontSize: '1.05rem' }}>
+            <strong style={{ color: 'white', fontWeight: 600 }}>Ingénieur Logiciel Full-Stack</strong>{' '}
+            avec plus de <span style={{ color: '#a29eff', fontWeight: 500 }}>2 ans d'expérience</span> dans
+            le développement de plateformes SaaS à grande échelle — principalement dans le domaine de la
+            santé digitale.
+          </p>
+          <p style={{ color: 'rgba(255,255,255,0.4)', lineHeight: 1.8, fontSize: '1rem' }}>
+            Je maîtrise le backend (Spring Boot, Django REST) et le frontend (React.js, Next.js),
+            avec une expertise en intégration{' '}
+            <span style={{ color: '#22d3ee' }}>SSO / Keycloak</span>, pipelines{' '}
+            <span style={{ color: '#22d3ee' }}>CI/CD</span> et conteneurisation{' '}
+            <span style={{ color: '#22d3ee' }}>Docker</span>.
+          </p>
+        </motion.div>
+
+        {/* Trait cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+          {traits.map((trait, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
+              className="glass card-lift"
+              style={{
+                padding: '1.5rem',
+                borderRadius: '16px',
+              }}
+            >
+              <div style={{
+                width: 40, height: 40,
+                borderRadius: '10px',
+                background: 'rgba(108,95,255,0.12)',
+                border: '1px solid rgba(108,95,255,0.2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#a29eff',
+                marginBottom: '1rem',
+              }}>
+                {trait.icon}
               </div>
-            </div>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="lg:col-span-2 grid grid-cols-2 gap-4"
-          >
-            {stats.map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
-                className="glass-panel rounded-2xl p-5 text-center card-hover group"
-              >
-                <div className="flex justify-center mb-3 text-brand-400 group-hover:text-brand-300 transition-colors">
-                  {stat.icon}
-                </div>
-                <div className="text-3xl font-extrabold text-white mb-1">{stat.value}</div>
-                <div className="text-xs text-zinc-400 leading-tight">{stat.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
+              <h3 style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.5rem', color: 'white' }}>
+                {trait.title}
+              </h3>
+              <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>
+                {trait.desc}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .about-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   );
 }

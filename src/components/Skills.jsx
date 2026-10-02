@@ -1,87 +1,189 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Code2, Database, LayoutTemplate, ShieldCheck, Terminal, Server } from 'lucide-react';
 
-const skillCategories = [
+const categories = [
   {
-    title: "Langages",
-    icon: <Code2 className="w-6 h-6" />,
-    skills: ["Java", "JavaScript", "Python", "C", "C++"]
+    label: 'Backend',
+    color: '#6c5fff',
+    skills: ['Java', 'Spring Boot', 'Django REST', 'APIs RESTful', 'Microservices', 'Python'],
   },
   {
-    title: "Frameworks & Biblio",
-    icon: <LayoutTemplate className="w-6 h-6" />,
-    skills: ["Spring Boot", "Django REST", "React.js", "Next.js", "React Query", "WordPress"]
+    label: 'Frontend',
+    color: '#22d3ee',
+    skills: ['React.js', 'Next.js', 'JavaScript', 'React Query', 'Tailwind CSS'],
   },
   {
-    title: "Bases de données",
-    icon: <Database className="w-6 h-6" />,
-    skills: ["PostgreSQL", "MySQL"]
+    label: 'DevOps',
+    color: '#a29eff',
+    skills: ['Docker', 'CI/CD Pipelines', 'GitLab CI', 'Git', 'GitHub'],
   },
   {
-    title: "DevOps & Outils",
-    icon: <Terminal className="w-6 h-6" />,
-    skills: ["Docker", "Git", "GitHub", "GitLab", "CI/CD Pipelines"]
+    label: 'Bases de données',
+    color: '#f59e0b',
+    skills: ['PostgreSQL', 'MySQL'],
   },
   {
-    title: "Authentification",
-    icon: <ShieldCheck className="w-6 h-6" />,
-    skills: ["Keycloak", "SSO", "OAuth2", "RBAC"]
+    label: 'Sécurité & Auth',
+    color: '#34d399',
+    skills: ['Keycloak', 'SSO', 'OAuth2', 'RBAC'],
   },
   {
-    title: "Concepts",
-    icon: <Server className="w-6 h-6" />,
-    skills: ["APIs RESTful", "Microservices", "Plateformes SaaS", "Agile/Scrum"]
-  }
+    label: 'Concepts',
+    color: '#f472b6',
+    skills: ['Architecture Propre', 'SaaS Multi-tenant', 'Agile / Scrum', 'C', 'C++', 'WordPress'],
+  },
 ];
 
 export default function Skills() {
+  const [active, setActive] = useState(null);
+
   return (
-    <section id="skills" className="py-24 relative">
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="skills" style={{ padding: '7rem 3rem', position: 'relative', overflow: 'hidden' }}>
+      <div className="section-divider" />
+
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 600, height: 600, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(108,95,255,0.04) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ maxWidth: 900, margin: '0 auto', paddingTop: '3rem' }}>
+        {/* Label */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          transition={{ duration: 0.5 }}
+          className="section-number"
+          style={{ marginBottom: '1.5rem' }}
         >
-          <h3 className="text-brand-400 font-semibold tracking-widest uppercase mb-2">Expertise</h3>
-          <h2 className="text-3xl md:text-5xl font-bold text-white">Compétences Techniques</h2>
+          <span>04</span>
+          <span>Compétences Techniques</span>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skillCategories.map((category, idx) => (
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          style={{
+            fontSize: 'clamp(2rem, 5vw, 3rem)',
+            fontWeight: 800, letterSpacing: '-0.03em',
+            marginBottom: '1rem', lineHeight: 1.15,
+          }}
+        >
+          Mon arsenal{' '}
+          <span className="text-gradient">technique.</span>
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          style={{ color: 'rgba(255,255,255,0.35)', marginBottom: '3.5rem', fontSize: '0.95rem' }}
+        >
+          Survolez une catégorie pour explorer les technologies.
+        </motion.p>
+
+        {/* Category filter */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '2.5rem' }}
+        >
+          <button
+            onClick={() => setActive(null)}
+            style={{
+              padding: '0.4rem 1rem', borderRadius: '8px',
+              fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
+              background: active === null ? 'rgba(108,95,255,0.2)' : 'transparent',
+              border: `1px solid ${active === null ? 'rgba(108,95,255,0.4)' : 'rgba(255,255,255,0.07)'}`,
+              color: active === null ? '#a29eff' : 'rgba(255,255,255,0.4)',
+              transition: 'all 0.2s',
+            }}
+          >
+            Tout
+          </button>
+          {categories.map((cat, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(active === i ? null : i)}
+              style={{
+                padding: '0.4rem 1rem', borderRadius: '8px',
+                fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
+                background: active === i ? `${cat.color}18` : 'transparent',
+                border: `1px solid ${active === i ? `${cat.color}40` : 'rgba(255,255,255,0.07)'}`,
+                color: active === i ? cat.color : 'rgba(255,255,255,0.4)',
+                transition: 'all 0.2s',
+              }}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </motion.div>
+
+        {/* Skills grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
+          {categories.map((cat, i) => (
             <motion.div
-              key={idx}
-              initial={{ opacity: 0, scale: 0.95 }}
+              key={i}
+              initial={{ opacity: 0, scale: 0.96 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
+              className="glass card-lift"
+              style={{
+                borderRadius: '16px',
+                padding: '1.5rem',
+                opacity: active !== null && active !== i ? 0.35 : 1,
+                transition: 'opacity 0.3s ease',
+                cursor: 'default',
+                borderColor: active === i ? `${cat.color}30` : undefined,
+              }}
+              onMouseEnter={() => setActive(i)}
+              onMouseLeave={() => setActive(null)}
             >
-              <div className="glass-panel p-6 rounded-2xl h-full border border-zinc-800 hover:border-brand-500/50 transition-colors">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="p-3 bg-brand-500/10 text-brand-400 rounded-xl">
-                    {category.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-white">{category.title}</h3>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {category.skills.map((skill, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1.5 bg-zinc-800/80 text-zinc-300 rounded-lg text-sm font-medium hover:text-white hover:bg-zinc-700 transition-colors cursor-default"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
+              <div className="skill-category-header">
+                <span style={{
+                  width: 8, height: 8, borderRadius: '50%',
+                  background: cat.color,
+                  boxShadow: `0 0 12px ${cat.color}80`,
+                }} />
+                <span style={{ fontWeight: 700, fontSize: '0.85rem', color: cat.color, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                  {cat.label}
+                </span>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {cat.skills.map((skill, j) => (
+                  <motion.span
+                    key={j}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: j * 0.04 }}
+                    className="hex-skill"
+                    style={{
+                      borderColor: active === i ? `${cat.color}25` : undefined,
+                    }}
+                  >
+                    {skill}
+                  </motion.span>
+                ))}
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 640px) {
+          #skills > div > div:last-child { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   );
 }
