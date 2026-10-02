@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowUpRight, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -9,77 +9,140 @@ const PROJECTS = [
   {
     id:       1,
     num:      '01',
-    title:    'Plateforme de Santé Digitale',
-    subtitle: 'SaaS B2B · Ministère de la Santé',
-    desc:     'Plateforme complète de gestion des structures et personnels de santé avec tableaux de bord analytiques en temps réel.',
+    badge:    'En production',
+    title:    'Back-office National de Sant\u00e9',
+    subtitle: 'SaaS National \u00b7 Minist\u00e8re de la Sant\u00e9',
+    desc:     'Gestion centralis\u00e9e des utilisateurs, structures de sant\u00e9 et r\u00e9f\u00e9rentiels m\u00e9tier pour une plateforme SaaS nationale.',
     accent:   '#7c3aed',
     gradient: 'linear-gradient(135deg, #1a0a3d 0%, #2d1b69 50%, #0f172a 100%)',
-    tags:     ['Spring Boot', 'React.js', 'PostgreSQL', 'Keycloak', 'Docker'],
+    tags:     ['Spring Boot', 'React.js', 'PostgreSQL', 'Keycloak', 'Docker', 'CI/CD'],
     tasks: [
-      "API RESTful scalable avec Spring Boot et architecture en couches (Controller → Service → Repository).",
-      "Module de gestion des structures de santé : CRUD + hiérarchie organisationnelle.",
-      "Intégration Keycloak pour SSO multi-applications et gestion RBAC des rôles.",
-      "Tableaux de bord analytiques avec filtres dynamiques par région et gouvernorat.",
+      "Gestion centralis\u00e9e des utilisateurs, structures de sant\u00e9 et r\u00e9f\u00e9rentiels m\u00e9tier d'une plateforme SaaS nationale.",
+      "API RESTful scalable avec Spring Boot et architecture en couches (Controller \u2192 Service \u2192 Repository).",
+      "Module de gestion des structures de sant\u00e9 : CRUD + hi\u00e9rarchie organisationnelle compl\u00e8te.",
+      "Int\u00e9gration Keycloak pour SSO multi-applications et gestion RBAC des r\u00f4les.",
+      "Tableaux de bord analytiques avec filtres dynamiques par r\u00e9gion et gouvernorat.",
       "Pipeline CI/CD avec GitLab CI et conteneurisation Docker / Docker Compose.",
-      "Optimisation PostgreSQL pour gérer +50 000 enregistrements.",
-      "Formulaire multi-étapes pour la création des utilisateurs privés.",
+      "Optimisation des requ\u00eates PostgreSQL pour g\u00e9rer +50\u202f000 enregistrements.",
     ],
   },
   {
     id:       2,
     num:      '02',
-    title:    'Application de Gestion RH',
-    subtitle: "Système Interne d'Entreprise",
-    desc:     'Système RH avec suivi des présences, congés, évaluations de performances et rapports automatisés.',
+    badge:    'En production',
+    title:    'Cold Chain',
+    subtitle: 'Surveillance M\u00e9dicale Temps R\u00e9el',
+    desc:     'Supervision temps r\u00e9el des r\u00e9frig\u00e9rateurs m\u00e9dicaux avec suivi des pannes et notification automatique des incidents critiques.',
     accent:   '#00ffd0',
-    gradient: 'linear-gradient(135deg, #001a14 0%, #003d2e 50%, #0a1628 100%)',
-    tags:     ['Django REST', 'React.js', 'MySQL', 'React Query', 'RBAC'],
+    gradient: 'linear-gradient(135deg, #001a14 0%, #00302a 50%, #0a1628 100%)',
+    tags:     ['Django REST', 'React.js', 'WebSocket', 'PostgreSQL', 'Docker'],
     tasks: [
-      "Architecture backend Django REST avec modèles normalisés et serializers.",
-      "Workflow d'approbation des congés multi-niveaux avec notifications email.",
-      "Module de suivi des présences avec intégration pointeuse RFID.",
-      "Notifications automatiques avec Celery & Redis (emails + alertes temps réel).",
-      "Interface React.js responsive avec gestion d'état React Query.",
-      "Génération de rapports PDF mensuels avec WeasyPrint.",
-      "Tests unitaires et d'intégration avec couverture > 85 %.",
+      "Supervision temps r\u00e9el avec suivi des pannes et notification automatique des incidents.",
+      "Architecture WebSocket pour les alertes instantan\u00e9es c\u00f4t\u00e9 client sans polling.",
+      "Tableau de bord cartographique des \u00e9quipements r\u00e9frig\u00e9rants avec statut en direct.",
+      "Syst\u00e8me d'alertes configurables par seuil de temp\u00e9rature et type d'incident.",
+      "Module de rapport d'incidents avec historique et export PDF.",
+      "Backend Django REST avec endpoints optimis\u00e9s pour les donn\u00e9es de capteurs.",
+      "D\u00e9ploiement conteneuris\u00e9 Docker avec monitoring inclus.",
     ],
   },
   {
     id:       3,
     num:      '03',
-    title:    'Portail E-Commerce B2B',
-    subtitle: 'Marketplace Multi-Vendeurs',
-    desc:     'Plateforme B2B avec catalogue produits, gestion des commandes, paiements sécurisés et dashboard vendeur.',
+    badge:    'En production',
+    title:    'EPharmacie',
+    subtitle: 'Circuit du M\u00e9dicament \u00b7 Logique Pharmaceutique',
+    desc:     'Circuit complet du m\u00e9dicament (demandes, validation, stock, inventaire, dispensation), conforme aux exigences pharmaceutiques nationales.',
     accent:   '#f59e0b',
     gradient: 'linear-gradient(135deg, #1a0e00 0%, #3d2000 50%, #1a0a0a 100%)',
-    tags:     ['Next.js', 'Spring Boot', 'PostgreSQL', 'Stripe', 'Docker'],
+    tags:     ['Spring Boot', 'API REST', 'React.js', 'PostgreSQL', 'RBAC'],
     tasks: [
-      "Architecture microservices Spring Boot : catalogue, commande, paiement.",
-      "Frontend Next.js avec SSR pour l'optimisation SEO.",
-      "Intégration Stripe pour paiements en ligne et gestion des webhooks.",
-      "Recherche avancée avec filtres produits (prix, catégorie, fournisseur).",
-      "Dashboard vendeur personnalisé avec analytiques des ventes.",
-      "Système de reviews et notations avec modération automatique.",
-      "Optimisation des images avec Cloudinary et lazy loading.",
+      "Circuit complet du m\u00e9dicament : demandes, validation, stock, inventaire, dispensation.",
+      "Logique m\u00e9tier conforme aux exigences pharmaceutiques r\u00e9glementaires nationales.",
+      "Module de gestion des stocks avec alertes de p\u00e9remption et rupture.",
+      "Workflow de validation multi-niveaux pour les demandes de m\u00e9dicaments.",
+      "Interface de dispensation avec historique patient et contr\u00f4le des doublons.",
+      "API REST document\u00e9e Swagger pour l'int\u00e9gration avec les syst\u00e8mes externes.",
+      "Gestion RBAC fine : pharmacien, responsable stock, m\u00e9decin prescripteur.",
     ],
   },
   {
     id:       4,
     num:      '04',
-    title:    'Surveillance Réseau',
-    subtitle: 'Outil DevOps & Monitoring',
-    desc:     'Dashboard de surveillance réseau temps réel avec alertes automatiques, historique des métriques et visualisation Grafana.',
+    badge:    'En production',
+    title:    'Portail SSO Institutionnel',
+    subtitle: 'Authentification Centralis\u00e9e \u00b7 Keycloak',
+    desc:     'Portail SSO centralis\u00e9 avec acc\u00e8s par r\u00f4les et tra\u00e7abilit\u00e9 compl\u00e8te pour toutes les applications de la plateforme nationale de sant\u00e9.',
     accent:   '#a78bfa',
     gradient: 'linear-gradient(135deg, #0d0d1a 0%, #1a1035 50%, #050508 100%)',
-    tags:     ['Python', 'React.js', 'WebSocket', 'Grafana', 'Docker'],
+    tags:     ['Keycloak', 'SSO', 'OAuth2', 'RBAC', 'Spring Boot', 'React.js'],
     tasks: [
-      "Agents Python de collecte des métriques réseau en temps réel.",
-      "Architecture WebSocket pour les mises à jour live côté client.",
-      "Intégration Grafana pour les tableaux de bord de visualisation.",
-      "Système d'alertes configurable par e-mail et Slack.",
-      "Stockage des métriques dans InfluxDB avec rétention configurable.",
-      "Dashboard React.js avec graphiques interactifs Chart.js.",
-      "Déploiement conteneurisé Docker Compose, monitoring inclus.",
+      "Portail SSO centralis\u00e9 avec Keycloak : acc\u00e8s unifi\u00e9 \u00e0 toutes les applications.",
+      "Gestion des permissions par r\u00f4les (RBAC) avec h\u00e9ritage et d\u00e9l\u00e9gation.",
+      "Tra\u00e7abilit\u00e9 compl\u00e8te des connexions, actions et acc\u00e8s par application.",
+      "Int\u00e9gration OAuth2  Connect pour les applications tierces.",
+      "Interface d'administration des utilisateurs et des droits par realm Keycloak.",
+    ],
+  },
+  {
+    id:       5,
+    num:      '05',
+    badge:    'Autres projets',
+    title:    'Plateforme e-Learning',
+    subtitle: 'Formation en Ligne \u00b7 Infinity Talents',
+    desc:     'Back-office complet d\u2019une plateforme e-learning : gestion des r\u00f4les, programmes, notifications e-mail et contenus p\u00e9dagogiques.',
+    accent:   '#34d399',
+    gradient: 'linear-gradient(135deg, #001a0e 0%, #003320 50%, #050a0e 100%)',
+    tags:     ['Django REST', 'React.js', 'MySQL', 'React Query', 'Celery'],
+    tasks: [
+      "Back-office complet : gestion des r\u00f4les, programmes et contenus p\u00e9dagogiques.",
+      "Gestion des utilisateurs : apprenants, formateurs, administrateurs avec RBAC.",
+      "Notifications e-mail automatiques : inscription, rappels, validation de cours.",
+      "Moteur de progression des apprenants avec statistiques et certificats.",
+      "Interface de cr\u00e9ation de cours avec \u00e9diteur rich-text et upload de m\u00e9dias.",
+      "Syst\u00e8me de quiz avec correction automatique et g\u00e9n\u00e9ration de r\u00e9sultats.",
+      "Workforce : gestion des temps, pr\u00e9sences et paie (module annexe).",
+    ],
+  },
+  {
+    id:       6,
+    num:      '06',
+    badge:    'Autres projets',
+    title:    'e-Hiring & infinitymgt.fr',
+    subtitle: 'Recrutement Auto. \u00b7 Site Vitrine WordPress',
+    desc:     'Scoring automatis\u00e9 et matching candidats-offres avec CV standardis\u00e9s. Site vitrine WordPress du groupe Infinity Management.',
+    accent:   '#f472b6',
+    gradient: 'linear-gradient(135deg, #1a0010 0%, #3d0025 50%, #0a050a 100%)',
+    tags:     ['Django REST', 'React.js', 'API Backend', 'WordPress', 'Python'],
+    tasks: [
+      "e-Hiring : scoring automatis\u00e9 et matching candidats-offres selon crit\u00e8res m\u00e9tier.",
+      "G\u00e9n\u00e9ration automatique de CV standardis\u00e9s par candidat pour l'analyse comparative.",
+      "Algorithme de matching multi-crit\u00e8res (comp\u00e9tences, exp\u00e9rience, localisation).",
+      "Tableau de bord recruteur avec pipeline de candidatures et statuts.",
+      "Site corporate infinitymgt.fr : site vitrine WordPress d'un groupe international.",
+      "Architecture th\u00e8me WordPress sur-mesure avec optimisation des performances.",
+      "Int\u00e9gration de contenus dynamiques et r\u00e9f\u00e9rencement SEO multilingue.",
+    ],
+  },
+  {
+    id:       7,
+    num:      '07',
+    badge:    'Autres projets',
+    title:    'Workforce',
+    subtitle: 'Gestion des Temps & Pr\u00e9sences',
+    desc:     'Application web de gestion des temps et de pr\u00e9sence des employ\u00e9s : suivi des pointages, validation des heures et traitement de la paie.',
+    accent:   '#38bdf8',
+    gradient: 'linear-gradient(135deg, #001220 0%, #002a45 50%, #050a10 100%)',
+    tags:     ['Spring Boot', 'React.js', 'PostgreSQL', 'RBAC', 'Docker'],
+    wide:     true,
+    tasks: [
+      "Application web compl\u00e8te de gestion des temps et de pr\u00e9sence des employ\u00e9s.",
+      "Syst\u00e8me de pointage en temps r\u00e9el avec interface tactile et authentification par badge.",
+      "Validation des heures par les managers avec workflow d'approbation et commentaires.",
+      "Calcul automatique de la paie : heures normales, suppl\u00e9mentaires, absences et cong\u00e9s.",
+      "Tableau de bord RH : vue hebdomadaire/mensuelle des pr\u00e9sences par \u00e9quipe.",
+      "G\u00e9n\u00e9ration de bulletins de paie et exports CSV pour les logiciels comptables.",
+      "Gestion des plannings : affectation des employ\u00e9s aux shifts avec contr\u00f4le des chevauchements.",
     ],
   },
 ];
@@ -142,6 +205,15 @@ function Modal({ project, onClose, onPrev, onNext, total, idx }) {
           }} />
 
           <div style={{ position: 'relative', zIndex: 1 }}>
+            {/* Badge */}
+            {project.badge && (
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.7rem', padding: '0.22rem 0.65rem', borderRadius: '20px', background: project.badge === 'En production' ? 'rgba(0,255,208,0.12)' : 'rgba(167,139,250,0.12)', border: `1px solid ${project.badge === 'En production' ? 'rgba(0,255,208,0.3)' : 'rgba(167,139,250,0.3)'}` }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: project.badge === 'En production' ? '#00ffd0' : '#a78bfa', boxShadow: `0 0 6px ${project.badge === 'En production' ? '#00ffd0' : '#a78bfa'}` }} />
+                <span style={{ fontSize: '0.6rem', fontFamily: 'Space Mono, monospace', fontWeight: 700, color: project.badge === 'En production' ? '#00ffd0' : '#a78bfa', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                  {project.badge}
+                </span>
+              </div>
+            )}
             <div style={{ fontSize: '0.65rem', fontFamily: 'Space Mono, monospace', color: `${project.accent}cc`, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
               {project.num} / {String(total).padStart(2,'0')} · {project.subtitle}
             </div>
@@ -253,7 +325,7 @@ function Modal({ project, onClose, onPrev, onNext, total, idx }) {
 // ─────────────────────────────────────────────────────────────
 //  PROJECT CARD
 // ─────────────────────────────────────────────────────────────
-function ProjectCard({ project, index, onClick }) {
+function ProjectCard({ project, index, onClick, wide }) {
   const cardRef = useRef(null);
 
   const onMouseMove = useCallback((e) => {
@@ -271,7 +343,7 @@ function ProjectCard({ project, index, onClick }) {
       initial={{ opacity: 0, y: 36 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, delay: Math.min(index * 0.08, 0.5), ease: [0.16, 1, 0.3, 1] }}
       ref={cardRef}
       onClick={onClick}
       onMouseMove={onMouseMove}
@@ -284,6 +356,9 @@ function ProjectCard({ project, index, onClick }) {
         position: 'relative',
         transition: 'border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease',
         '--mx': '50%', '--my': '50%',
+        display: wide ? 'flex' : 'block',
+        flexDirection: 'row',
+        height: wide ? 220 : 'auto',
       }}
       className="project-card"
     >
@@ -296,7 +371,12 @@ function ProjectCard({ project, index, onClick }) {
 
       {/* ── Visual header ── */}
       <div style={{
-        height: 200, background: project.gradient, position: 'relative', overflow: 'hidden',
+        height: wide ? '100%' : 200,
+        width:  wide ? '35%'  : '100%',
+        flexShrink: 0,
+        background: project.gradient,
+        position: 'relative',
+        overflow: 'hidden',
       }}>
         {/* Grid pattern */}
         <div style={{
@@ -314,13 +394,22 @@ function ProjectCard({ project, index, onClick }) {
           filter: 'blur(20px)',
         }} />
 
-        {/* Project number */}
-        <div style={{
-          position: 'absolute', top: '1rem', left: '1.25rem',
-          fontFamily: 'Space Mono, monospace', fontSize: '0.65rem',
-          color: `${project.accent}80`, letterSpacing: '0.2em',
-        }}>
-          {project.num}
+        {/* Project number + badge */}
+        <div style={{ position: 'absolute', top: '1rem', left: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontFamily: 'Space Mono, monospace', fontSize: '0.65rem', color: `${project.accent}80`, letterSpacing: '0.2em' }}>
+            {project.num}
+          </span>
+          {project.badge && (
+            <span style={{
+              fontSize: '0.55rem', fontFamily: 'Space Mono, monospace', fontWeight: 700,
+              padding: '0.18rem 0.5rem', borderRadius: '20px', letterSpacing: '0.08em', textTransform: 'uppercase',
+              background: project.badge === 'En production' ? 'rgba(0,255,208,0.15)' : 'rgba(167,139,250,0.15)',
+              border: `1px solid ${project.badge === 'En production' ? 'rgba(0,255,208,0.35)' : 'rgba(167,139,250,0.35)'}`,
+              color: project.badge === 'En production' ? '#00ffd0' : '#a78bfa',
+            }}>
+              {project.badge}
+            </span>
+          )}
         </div>
 
         {/* Arrow icon */}
@@ -360,19 +449,34 @@ function ProjectCard({ project, index, onClick }) {
       </div>
 
       {/* ── Card body ── */}
-      <div style={{ padding: '1.5rem 1.75rem' }}>
+      <div style={{ padding: wide ? '2rem 2.5rem' : '1.5rem 1.75rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: wide ? 'center' : 'flex-start' }}>
         <div style={{ fontSize: '0.67rem', fontFamily: 'Space Mono, monospace', color: project.accent, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
           {project.subtitle}
         </div>
-        <h3 className="syne" style={{ fontWeight: 800, fontSize: '1.18rem', color: 'white', marginBottom: '0.6rem', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
+        <h3 className="syne" style={{ fontWeight: 800, fontSize: wide ? '1.55rem' : '1.18rem', color: 'white', marginBottom: '0.6rem', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
           {project.title}
         </h3>
-        <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.65, marginBottom: '1.2rem' }}>
+        <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.42)', lineHeight: 1.7, marginBottom: '1.2rem' }}>
           {project.desc}
         </p>
 
+        {/* Tags — show all in wide mode */}
+        {wide && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1.25rem' }}>
+            {project.tags.map((t, i) => (
+              <span key={i} style={{
+                padding: '0.22rem 0.65rem', borderRadius: '7px',
+                fontSize: '0.7rem', fontWeight: 600,
+                background: `${project.accent}12`,
+                border: `1px solid ${project.accent}25`,
+                color: project.accent,
+              }}>{t}</span>
+            ))}
+          </div>
+        )}
+
         {/* Footer */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: 'auto' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.28)' }}>
             <CheckCircle2 size={12} style={{ color: project.accent }} />
             {project.tasks.length} tâches réalisées
@@ -424,20 +528,32 @@ export default function Projects() {
           <h2 className="syne" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.08 }}>
             Projets <span className="text-grad">réalisés.</span>
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.88rem', maxWidth: 280, lineHeight: 1.65 }}>
-            Cliquez sur un projet pour découvrir les tâches réalisées en détail.
-          </p>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem', fontFamily: 'Space Mono, monospace', color: '#00ffd0' }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00ffd0', boxShadow: '0 0 8px #00ffd0' }} /> 4 en production
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem', fontFamily: 'Space Mono, monospace', color: '#a78bfa' }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#a78bfa', boxShadow: '0 0 8px #a78bfa' }} /> 3 autres projets
+              </span>
+            </div>
+            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem', lineHeight: 1.55 }}>
+              Cliquez pour voir le détail.
+            </p>
+          </div>
         </motion.div>
 
-        {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
+        {/* Grid — 3 cols desktop */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.1rem' }} className="projects-grid">
           {PROJECTS.map((project, i) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={i}
-              onClick={() => openModal(i)}
-            />
+            <div key={project.id} style={project.wide ? { gridColumn: '1 / -1' } : {}}>
+              <ProjectCard
+                project={project}
+                index={i}
+                onClick={() => openModal(i)}
+                wide={project.wide}
+              />
+            </div>
           ))}
         </div>
       </div>
@@ -471,8 +587,11 @@ export default function Projects() {
           border-color: rgba(124,58,237,0.5) !important;
           transform: rotate(45deg);
         }
-        @media (max-width: 640px) {
-          #projects div[style*="repeat(2, 1fr)"] { grid-template-columns: 1fr !important; }
+        @media (max-width: 900px) {
+          .projects-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 520px) {
+          .projects-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>
